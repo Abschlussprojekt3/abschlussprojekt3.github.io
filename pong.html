@@ -77,14 +77,14 @@
             width: ballWidth,
             height: ballHeight,
             velocityX: 1,
-            velocityY: 1,
+            velocityY: 2, // Set y-speed to 2
         }
 
         let player1Score = 0;
         let player2Score = 0;
 
         let keyState = {};
-        let touchX = null;
+        let touchY = null;
 
         window.onload = function () {
             board = document.getElementById("board");
@@ -110,33 +110,35 @@
             });
 
             board.addEventListener("touchstart", function (e) {
-                touchX = e.touches[0].clientX;
+                touchY = e.touches[0].clientY;
             });
 
             board.addEventListener("touchmove", function (e) {
-                if (touchX !== null) {
-                    let deltaX = e.touches[0].clientX - touchX;
-                    touchX = e.touches[0].clientX;
-                    movePlayersOnTouch(deltaX);
+                if (touchY !== null) {
+                    let deltaY = e.touches[0].clientY - touchY;
+                    touchY = e.touches[0].clientY;
+                    movePlayersOnTouch(deltaY);
                 }
             });
 
             board.addEventListener("touchend", function (e) {
-                touchX = null;
+                touchY = null;
             });
         }
 
-        function movePlayersOnTouch(deltaX) {
+        function movePlayersOnTouch(deltaY) {
             // Move player1 on touch (left side)
-            if (touchX < boardWidth / 2) {
-                if (player1.x + deltaX >= 0 && player1.x + deltaX + playerWidth <= boardWidth / 2) {
-                    player1.x += deltaX;
+            if (touchY < boardHeight / 2) {
+                let nextPlayer1Y = player1.y + deltaY;
+                if (nextPlayer1Y >= 0 && nextPlayer1Y + playerHeight <= boardHeight) {
+                    player1.y = nextPlayer1Y;
                 }
             }
             // Move player2 on touch (right side)
             else {
-                if (player2.x + deltaX >= boardWidth / 2 && player2.x + deltaX + playerWidth <= boardWidth) {
-                    player2.x += deltaX;
+                let nextPlayer2Y = player2.y + deltaY;
+                if (nextPlayer2Y >= 0 && nextPlayer2Y + playerHeight <= boardHeight) {
+                    player2.y = nextPlayer2Y;
                 }
             }
         }
@@ -230,7 +232,7 @@
                 width: ballWidth,
                 height: ballHeight,
                 velocityX: direction,
-                velocityY: 1,
+                velocityY: 2, // Set y-speed to 2
             }
         }
 

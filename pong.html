@@ -8,6 +8,7 @@
         body {
             text-align: center;
             background-color: black;
+            overflow: hidden; /* Added to prevent scroll bars */
         }
         #board {
             background-color: black;
@@ -19,7 +20,7 @@
 
         button {
             display: block;
-            margin: 20px auto; 
+            margin: 20px auto; /* Adjust the margin for vertical spacing */
             padding: 10px 20px;
             font-size: 16px;
             font-weight: bold;
@@ -83,13 +84,18 @@
         let player2Score = 0;
 
         let keyState = {};
-        let touchY = null;
+        let touchX = null;
 
         window.onload = function () {
             board = document.getElementById("board");
             board.height = boardHeight;
             board.width = boardWidth;
             context = board.getContext("2d");
+
+            // Disable scrolling on touch devices
+            document.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+            }, { passive: false });
 
             requestAnimationFrame(update);
 
@@ -104,30 +110,34 @@
             });
 
             board.addEventListener("touchstart", function (e) {
-                touchY = e.touches[0].clientY;
+                touchX = e.touches[0].clientX;
             });
 
             board.addEventListener("touchmove", function (e) {
-                if (touchY !== null) {
-                    let deltaY = e.touches[0].clientY - touchY;
-                    touchY = e.touches[0].clientY;
-                    movePlayersOnTouch(deltaY);
+                if (touchX !== null) {
+                    let deltaX = e.touches[0].clientX - touchX;
+                    touchX = e.touches[0].clientX;
+                    movePlayersOnTouch(deltaX);
                 }
             });
 
             board.addEventListener("touchend", function (e) {
-                touchY = null;
+                touchX = null;
             });
         }
 
-        function movePlayersOnTouch(deltaY) {
-            // Move player1 on touch
-            if (player1.y + deltaY >= 0 && player1.y + deltaY + playerHeight <= boardHeight) {
-                player1.y += deltaY;
+        function movePlayersOnTouch(deltaX) {
+            // Move player1 on touch (left side)
+            if (touchX < boardWidth / 2) {
+                if (player1.x + deltaX >= 0 && player1.x + deltaX + playerWidth <= boardWidth / 2) {
+                    player1.x += deltaX;
+                }
             }
-            // Move player2 on touch
-            if (player2.y + deltaY >= 0 && player2.y + deltaY + playerHeight <= boardHeight) {
-                player2.y += deltaY;
+            // Move player2 on touch (right side)
+            else {
+                if (player2.x + deltaX >= boardWidth / 2 && player2.x + deltaX + playerWidth <= boardWidth) {
+                    player2.x += deltaX;
+                }
             }
         }
 

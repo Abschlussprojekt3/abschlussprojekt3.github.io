@@ -168,20 +168,20 @@
             }
         };
 
-        // Add both click and touchstart event listeners
+        
         cell.addEventListener('click', handleCellClick);
         cell.addEventListener('touchstart', handleCellClick);
 
-        // Reset hover effect on touchend event
+        
         cell.addEventListener('touchend', () => {
             cell.style.backgroundColor = '';
         });
 
-        // Prevent default touchmove behavior
+       
         cell.addEventListener('touchmove', (e) => {
             e.preventDefault();
-        });
-    });
+        })
+    })
     </script>
 </body>
 

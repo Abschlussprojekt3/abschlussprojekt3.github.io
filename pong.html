@@ -17,7 +17,6 @@
             border-right: 5px solid white;
             border-left: 5px solid white;
         }
-
         button {
             display: block;
             margin: 20px auto; 
@@ -33,7 +32,6 @@
             border-radius: 5px;
             transition: background-color 0.3s ease-in-out;
         }
-
         button:hover {
             background-color: rgba(255, 255, 255, 0.400);
         }
@@ -41,7 +39,6 @@
 </head>
 <body>
     <button onclick="goToHome()">Home</button>
-
     <canvas id="board"></canvas>
     
     <script>
@@ -49,10 +46,8 @@
         let boardWidth = 500;
         let boardHeight = 500;
         let context;
-
         let playerWidth = 10;
         let playerHeight = 50;
-
         let player1 = {
             x: 10,
             y: boardHeight / 2,
@@ -60,7 +55,6 @@
             height: playerHeight,
             velocityY: 0
         }
-
         let player2 = {
             x: boardWidth - playerWidth - 10,
             y: boardHeight / 2,
@@ -68,51 +62,42 @@
             height: playerHeight,
             velocityY: 0
         }
-
         let ballWidth = 10;
         let ballHeight = 10;
         let ball = {
             x: boardWidth / 2,
-            y: boardHeight / 2,
-            width: ballWidth,
-            height: ballHeight,
-            velocityX: 4,
-            velocityY: 4, 
-        }
+             y: boardHeight / 2,
+             width: ballWidth,
+             height: ballHeight,
+             velocityX: 4,
+             velocityY: 4, 
+         }
 
-        let player1Score = 0;
+         let player1Score = 0;
         let player2Score = 0;
-
         let keyState = {};
         let touchY = null;
-
         window.onload = function () {
             board = document.getElementById("board");
             board.height = boardHeight;
             board.width = boardWidth;
             context = board.getContext("2d");
-
             // Disable scrolling on touch devices
             document.addEventListener('touchmove', function (e) {
                 e.preventDefault();
             }, { passive: false });
-
             requestAnimationFrame(update);
-
             document.addEventListener("keydown", function (e) {
                 keyState[e.code] = true;
                 movePlayer();
             });
-
             document.addEventListener("keyup", function (e) {
                 keyState[e.code] = false;
                 movePlayer();
             });
-
             board.addEventListener("touchstart", function (e) {
                 touchY = e.touches[0].clientY;
             });
-
             board.addEventListener("touchmove", function (e) {
                 if (touchY !== null) {
                     let deltaY = e.touches[0].clientY - touchY;
@@ -120,12 +105,10 @@
                     movePlayersOnTouch(deltaY);
                 }
             });
-
             board.addEventListener("touchend", function (e) {
                 touchY = null;
             });
         }
-
         function movePlayersOnTouch(deltaY) {
             // Move player1 on touch (left side)
             if (touchY < boardHeight / 2) {
@@ -142,33 +125,27 @@
                 }
             }
         }
-
         function update() {
             requestAnimationFrame(update);
             context.clearRect(0, 0, board.width, board.height);
-
             context.fillStyle = "white";
             let nextPlayer1Y = player1.y + player1.velocityY;
             if (!outOfBounds(nextPlayer1Y)) {
                 player1.y = nextPlayer1Y;
             }
             context.fillRect(player1.x, player1.y, player1.width, player1.height);
-
             let nextPlayer2Y = player2.y + player2.velocityY;
             if (!outOfBounds(nextPlayer2Y)) {
                 player2.y = nextPlayer2Y;
             }
             context.fillRect(player2.x, player2.y, player2.width, player2.height);
-
             context.fillStyle = "white";
             ball.x += ball.velocityX;
             ball.y += ball.velocityY;
             context.fillRect(ball.x, ball.y, ball.width, ball.height);
-
             if (ball.y <= 0 || (ball.y + ball.height >= boardHeight)) {
                 ball.velocityY *= -1;
             }
-
             if (detectCollision(ball, player1)) {
                 if (ball.x <= player1.x + player1.width) {
                     ball.velocityX *= -1;
@@ -178,7 +155,6 @@
                     ball.velocityX *= -1;
                 }
             }
-
             if (ball.x < 0) {
                 player2Score++;
                 resetGame(1);
@@ -186,20 +162,16 @@
                 player1Score++;
                 resetGame(-1);
             }
-
             context.font = "45px monospace"
             context.fillText(player1Score, boardWidth / 5, 45);
             context.fillText(player2Score, boardWidth * 4 / 5 - 45, 45);
-
             for (let i = 10; i < board.height; i += 25) {
                 context.fillRect(board.width / 2 - 10, i, 5, 5);
             }
         }
-
         function outOfBounds(yPosition) {
             return (yPosition < 0 || yPosition + playerHeight > boardHeight);
         }
-
         function movePlayer() {
             if (keyState["KeyW"]) {
                 player1.velocityY = -3;
@@ -208,7 +180,6 @@
             } else {
                 player1.velocityY = 0;
             }
-
             if (keyState["ArrowUp"]) {
                 player2.velocityY = -3;
             } else if (keyState["ArrowDown"]) {
@@ -217,25 +188,22 @@
                 player2.velocityY = 0;
             }
         }
-
         function detectCollision(a, b) {
             return a.x < b.x + b.width &&
                 a.x + a.width > b.x &&
                 a.y < b.y + b.height &&
                 a.y + a.height > b.y;
         }
-
-        function resetGame(4) {
+        function resetGame(direction) {
             ball = {
                 x: boardWidth / 2,
                 y: boardHeight / 2,
                 width: ballWidth,
                 height: ballHeight,
-                velocityX: 4,
-                velocityY: 4,
+                velocityX: direction,
+                velocityY: 6,
             }
         }
-
         function goToHome() {
             window.location.href = 'index.html';
         }

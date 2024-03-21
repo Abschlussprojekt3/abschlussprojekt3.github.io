@@ -79,6 +79,7 @@
             velocityX: 4,
             velocityY: 4, 
         }
+        let direction = 4,
 
         let player1Score = 0;
         let player2Score = 0;
@@ -225,13 +226,13 @@
                 a.y + a.height > b.y;
         }
 
-        function resetGame(4) {
+        function resetGame(direction) {
             ball = {
                 x: boardWidth / 2,
                 y: boardHeight / 2,
                 width: ballWidth,
                 height: ballHeight,
-                velocityX: 4,
+                velocityX: direction,
                 velocityY: 4,
             }
         }
